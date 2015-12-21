@@ -1,0 +1,7 @@
+# -------------------------------------
+# --- AutoWorlguard Configuration ---
+# -------------------------------------
+up: 200
+down: 16
+priority: 10
+parent: cubicraft

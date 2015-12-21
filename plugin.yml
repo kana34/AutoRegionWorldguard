@@ -1,0 +1,10 @@
+name: AutoRegionWorldguard
+main: kana.AutoRegionWorldguard.AutoRegionWorldguard
+author: kana34
+website: http://www.2k16.ovh
+description: Permet de creer des terrains worldguard rapidement
+version: 1.0
+depends: [Vault, WorldGuard, WorldEdit]
+commands:
+    arw:
+        description: Tapez /arw help.
