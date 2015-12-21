@@ -1,0 +1,3 @@
+# AutoRegionWorldguard
+Plugin AutoRegionWorldguard
+x
