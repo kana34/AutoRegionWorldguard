@@ -95,6 +95,7 @@ public class ARWcommand implements CommandExecutor{
     					return true;
 	    			}
 	    			// On récupère la priorité et on défini le nom du terrain
+	    			//-------------------------------------------------------
 	    			this.priority = this.plugin.getConfig().getInt("priority");
 	    			this.nomTerrain = "t_" + System.currentTimeMillis() + "0";
 	    			this.pr = new ProtectedCuboidRegion(nomTerrain, Pmin, Pmax);
