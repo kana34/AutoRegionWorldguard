@@ -1,11 +1,13 @@
 package kana.AutoRegionWorldguard;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
@@ -19,9 +21,9 @@ public class AutoRegionWorldguard extends JavaPlugin implements Listener {
 	public ARWcommand commandL;
 	public PluginCommand batchcommand;
 	
-	public void onEnable()
-    {
-    	this.commandL = new ARWcommand(this);
+	public void onEnable(){
+		this.getServer().getPluginManager().registerEvents(this, this);
+		this.commandL = new ARWcommand(this);
         this.batchcommand = getCommand("arw");
         batchcommand.setExecutor(commandL);
         
@@ -29,32 +31,40 @@ public class AutoRegionWorldguard extends JavaPlugin implements Listener {
     	Vault.setupChat();
     	Vault.setupPermissions();
     	Vault.setupEconomy();
-    	if (!Vault.setupEconomy()) 
-    	{
-            logger.info(String.format("[%s] - AutoRegionWorldguard necessite Vault pour fonctionner!", getDescription().getName()));
+    	if (!Vault.setupEconomy()){
+            logger.info(String.format("[%s] - Necessite Vault pour fonctionner!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
             return;
-        }
+        }    	
     	
     	this.loadConfig();
-		this.getServer().getPluginManager().registerEvents(this, this);
-        
+		        
 		logger.info("[AutoRegionWorldguard] Plugin charge parfaitement!");
+		
+		// Metric
+    	//-------
+    	try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException e) {
+        	logger.info("[AutoRegionWorldguard - Metric] Un probleme est survenue avec Metric !");
+        }
     }
-    public void onDisable()
-    {
+	
+    public void onDisable(){
             logger.info("[AutoRegionWorldguard] Plugin desactive...");
     }
+    
     public void loadConfig(){           
-    	this.getConfig().options().copyDefaults(true);
-		this.saveConfig();
+    	this.getConfig().options().copyDefaults(true);	
+    	this.saveConfig();
     }
+    
     WorldGuardPlugin getWorldGuard() {
         this.plugin = getServer().getPluginManager().getPlugin("WorldGuard");   
-        // WorldGuard may not be loaded
         if (plugin == null || !(plugin instanceof WorldGuardPlugin)) { 
             getServer().getPluginManager().disablePlugin(this);
-            return null; // Maybe you want throw an exception instead
+            return null;
         }     
         return (WorldGuardPlugin) plugin;
     }

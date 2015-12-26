@@ -43,19 +43,20 @@ public class ARWcommand implements CommandExecutor{
 
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args){
 		// Récupération du joueur qui envoie la commande
+		//----------------------------------------------
 		Player player = null;
     	if(sender instanceof Player){
     		player = (Player) sender;
     	}
     	if(commandLabel.equalsIgnoreCase("arw")){
-    		// Si il n'y a pas d'argument
 	        if(args.length == 0){
 	        	sender.sendMessage(ChatColor.GOLD + "[ARW] " + ChatColor.WHITE + "Tapez /arw help");
 	        	return true;
 	        }
-	        // Si il y a 1 argument
-	        if(args.length == 1){
-	        	// Si L'argument est égale à HELP
+	        else if(args.length == 1){
+	        	//--------------
+	        	//---- HELP ----
+	        	//--------------
 	        	if(args[0].equalsIgnoreCase("help")){
 	        		sender.sendMessage(ChatColor.WHITE + "----------- HELP AutoRegionWorldguard -----------");
 					sender.sendMessage(ChatColor.WHITE + "/arw help" + ChatColor.GREEN + " Obtenir l'aide");
@@ -63,16 +64,24 @@ public class ARWcommand implements CommandExecutor{
 					sender.sendMessage(ChatColor.WHITE + "/arw reload" + ChatColor.GREEN + " Recharger la configuration");
 		        	return true;
 	        	}
-	        	if(args[0].equalsIgnoreCase("reload")){
+	        	//----------------
+	        	//---- RELOAD ----
+	        	//----------------
+	        	else if(args[0].equalsIgnoreCase("reload")){
 	        		if(!Vault.permission.has(player, "autoregionworldguard.reload")){
 	        			sender.sendMessage(ChatColor.RED + "[ARW] " + ChatColor.WHITE + "Vous n'avez pas la permission d'utiliser cette commande !");
-	        			return true;
+	        			return false;
 	        		}
-	        		this.plugin.loadConfig();
-	        		this.plugin.saveConfig();
+	        		this.plugin.reloadConfig();
 		        	return true;
 	        	}
-	        	if(args[0].equalsIgnoreCase("create")){
+	        	//----------------
+	        	//---- CREATE ----
+	        	//----------------
+	        	else if(args[0].equalsIgnoreCase("create")){
+	        		
+	        		// On vérifi la permission
+	        		// -----------------------
 	        		if(!Vault.permission.has(player, "autoregionworldguard.create")){
 	        			sender.sendMessage(ChatColor.RED + "[ARW] " + ChatColor.WHITE + "Vous n'avez pas la permission d'utiliser cette commande !");
 	        			return true;
@@ -85,7 +94,8 @@ public class ARWcommand implements CommandExecutor{
 		    		this.Pmax = recupBlocVectorMax(selection);
 					this.Pmin = recupBlocVectorMin(selection);
 					
-					// Vérification si le parent existe
+					// On vérification si le parent existe
+					//------------------------------------
 					this.world = player.getWorld();
 					this.parentConf = this.plugin.getConfig().getString("parent");
 					this.regionManager = worldGuard.getRegionManager(world);
@@ -110,9 +120,18 @@ public class ARWcommand implements CommandExecutor{
 					} 
 			    	catch (Exception exp){
 			    		sender.sendMessage(ChatColor.RED + "[ARW] " + ChatColor.WHITE + "Un problème est survenu, contactez un admin !");
-			    		return true;
+			    		sender.sendMessage(ChatColor.RED + "[ARW] " + ChatColor.WHITE + exp);
+			    		return false;
 					}
 	        	}
+	        	else{
+	        		sender.sendMessage(ChatColor.RED + "[ARW] " + ChatColor.WHITE + "Tapez /arw help !");
+		    		return false;
+	        	}
+	        }
+	        else{
+	        	sender.sendMessage(ChatColor.RED + "[ARW] " + ChatColor.WHITE + "Tapez /arw help !");
+	    		return false;
 	        }
     	}
 		return false;
